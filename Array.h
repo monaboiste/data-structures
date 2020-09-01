@@ -7,7 +7,7 @@
 ///
 /// Array class
 ///
-/// Objects of this class has fixed non-modifiable size.
+/// Objects of this class have fixed non-modifiable size.
 /// Data is stored on the stack.
 ///
 
