@@ -15,27 +15,27 @@ template <class T>
 class DynamicArray
 {
 public:
-	using valueType = T;
-	using sizeType = size_t;
+	using value_type = T;
+	using size_type = size_t;
 	using pointer = T*;
 	using reference = T&;
-	using constPointer = const T*;
-	using constReference = const T&;
+	using const_pointer = const T*;
+	using const_reference = const T&;
+	using difference_type = std::ptrdiff_t;
 	using iterator = RAIterator<T>;
-	using constIterator = RAIterator<const T>;
-	using differenceType = std::ptrdiff_t;
+	using const_iterator = RAIterator<const T>;
 
 public:
 	DynamicArray() = default;
 
-	DynamicArray(sizeType size)
+	DynamicArray(size_type size)
 		: m_capacity(size)
 		, m_size(m_capacity)
 		, m_data(new T[m_capacity])
 	{
 	}
 
-	DynamicArray(const std::initializer_list<valueType>& valueList)
+	DynamicArray(const std::initializer_list<value_type>& valueList)
 		: m_capacity(valueList.size())
 		, m_size(m_capacity)
 		, m_data(new T[m_capacity])
@@ -111,7 +111,7 @@ public:
 
 	constexpr void PushBack(const T& value)
 	{
-		sizeType newSize = m_size + 1;
+		size_type newSize = m_size + 1;
 		ReallocAndCopyData(newSize);
 		m_data[m_size] = value;
 		m_size = newSize;
@@ -128,12 +128,12 @@ public:
 	}
 
 
-	constexpr sizeType Size() const
+	constexpr size_type Size() const
 	{
 		return m_size;
 	}
 
-	constexpr sizeType Capacity() const
+	constexpr size_type Capacity() const
 	{
 		return m_capacity;
 	}
@@ -148,12 +148,12 @@ public:
 		return iterator(&m_data[m_size]);
 	}
 
-	constexpr constIterator Cbegin() const
+	constexpr const_iterator Cbegin() const
 	{
 		return constIterator(&m_data[0]);
 	}
 
-	constexpr constIterator Cend() const
+	constexpr const_iterator Cend() const
 	{
 		return constIterator(&m_data[m_size]);
 	}
@@ -165,16 +165,16 @@ public:
 		return m_data[index];
 	}
 
-	constexpr constReference operator[] (size_t index) const
+	constexpr const_reference operator[] (size_t index) const
 	{
 		assert(index >= 0 && index < m_size);
 		return m_data[index];
 	}
 
 private:
-	constexpr void ReallocAndCopyData(sizeType newSize)
+	constexpr void ReallocAndCopyData(size_type newSize)
 	{
-		sizeType growth = CalculateGrowth(newSize);
+		size_type growth = CalculateGrowth(newSize);
 		if (growth > m_capacity)
 		{
 			m_capacity = growth;
@@ -188,18 +188,18 @@ private:
 		}
 	}
 
-	constexpr sizeType CalculateGrowth(sizeType newSize)
+	constexpr size_type CalculateGrowth(size_type newSize)
 	{
-		sizeType oldCapacity = m_capacity;
+		size_type oldCapacity = m_capacity;
 		if (oldCapacity >= newSize)
 			return oldCapacity;
 
-		sizeType newCapacity = m_capacity + m_capacity / 2;
+		size_type newCapacity = m_capacity + m_capacity / 2;
 		return newCapacity;
 	}
 
 private:
-	sizeType m_capacity = 0;
-	sizeType m_size = 0;
+	size_type m_capacity = 0;
+	size_type m_size = 0;
 	pointer m_data = nullptr;
 };

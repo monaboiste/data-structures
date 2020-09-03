@@ -1,9 +1,11 @@
 #pragma once
 
+#include <iterator>
+#include <compare>
+
 ///
 /// Random access iterator class
 /// 
-/// Doesn't work with stl algorithms.
 /// This class was created in order to work with
 /// custom container classes.
 /// 
@@ -12,13 +14,14 @@ template <class T>
 class RAIterator
 {
 public:
-	using category = std::random_access_iterator_tag;
-	using valueType = T;
+	// @NOTE: stl algorithms expects exactly named traits such as below.
+	using iterator_category = std::random_access_iterator_tag;
+	using value_type = T;
 	using pointer = T*;
 	using reference = T&;
-	using constPointer = const T*;
-	using constReference = const T&;
-	using differenceType = std::ptrdiff_t;
+	using const_pointer = const T*;
+	using const_reference = const T&;
+	using difference_type = std::ptrdiff_t;
 public:
 	RAIterator() = default;
 
@@ -30,28 +33,35 @@ public:
 	explicit constexpr operator bool() const { return m_parg != nullptr; }
 
 	constexpr reference operator *() { return *m_parg; }
-	constexpr constReference operator *() const { return *m_parg; }
+	constexpr const_reference operator *() const { return *m_parg; }
 	constexpr pointer operator ->() { return m_parg; }
 
-	constexpr bool operator ==(const RAIterator& other) { return m_parg == other.m_parg; }
-	constexpr bool operator !=(const RAIterator& other) { return !(m_parg == other.m_parg); }
+	constexpr std::strong_ordering operator <=>(const RAIterator& other) const = default;
 
-	constexpr RAIterator operator +(const differenceType& movement) { return RAIterator(m_parg + movement); }
-	constexpr RAIterator operator -(const differenceType& movement) { return RAIterator(m_parg - movement); }
+	constexpr RAIterator operator +(const difference_type& movement) { return RAIterator(m_parg + movement); }
+	constexpr RAIterator operator -(const difference_type& movement) { return RAIterator(m_parg - movement); }
 
-	constexpr RAIterator& operator +=(const differenceType& movement) { m_parg += movement; return *this; }
-	constexpr RAIterator& operator -=(const std::ptrdiff_t& movement) { m_parg -= movement; return *this; }
+	constexpr RAIterator& operator +=(const difference_type& movement) { m_parg += movement; return *this; }
+	constexpr RAIterator& operator -=(const difference_type& movement) { m_parg -= movement; return *this; }
 
 	constexpr RAIterator& operator ++() { m_parg++; return *this; }
 	constexpr RAIterator& operator --() { m_parg--; return *this; }
 	constexpr RAIterator operator ++(int) { T* tempPtr = m_parg; m_parg++; return RAIterator(tempPtr); }
 	constexpr RAIterator operator --(int) { T* tempPtr = m_parg; m_parg--; return RAIterator(tempPtr); }
 
-	constexpr differenceType operator -(const RAIterator& other) { return std::distance(m_parg, other.m_parg); }
+	constexpr difference_type operator -(const RAIterator& other) { return std::distance(m_parg, other.m_parg); }
 
 	constexpr pointer Get() { return m_parg; }
-	constexpr constPointer Get() const { return m_parg; }
+	constexpr const_pointer Get() const { return m_parg; }
 
 protected:
 	pointer m_parg = nullptr;
 };
+
+template<typename T>
+typename RAIterator<T>::difference_type operator -(
+	const RAIterator<T>& lhs,
+	const RAIterator<T>& rhs)
+{
+	return lhs.Get() - rhs.Get();
+}
