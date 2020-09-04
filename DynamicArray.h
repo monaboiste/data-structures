@@ -117,9 +117,31 @@ public:
 		m_size = newSize;
 	}
 
+	template <typename ...Args>
+	T& EmplaceBack(Args&& ...args)
+	{
+		size_type oldSize = m_size;
+		size_type newSize = m_size + 1;
+		ReallocAndCopyData(newSize);
+		m_data[m_size] = T(std::forward<Args>(args)...);
+		m_size = newSize;
+		return m_data[oldSize];
+	}
+
 	constexpr void PopBack()
 	{
-		m_size--;
+		if (m_size > 0)
+		{
+			m_size--;
+			m_data[m_size].~T();
+		}
+	}
+
+	constexpr void Clear()
+	{
+		for (int i = 0; i < m_size; i++)
+			m_data[i].~T();
+		m_size = 0;
 	}
 
 	constexpr bool Empty() const
