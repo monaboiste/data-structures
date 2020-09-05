@@ -21,7 +21,6 @@ public:
 	using reference = T&;
 	using const_pointer = const T*;
 	using const_reference = const T&;
-	using difference_type = std::ptrdiff_t;
 	using iterator = RAIterator<T>;
 	using const_iterator = RAIterator<const T>;
 
@@ -31,14 +30,14 @@ public:
 	DynamicArray(size_type size)
 		: m_capacity(size)
 		, m_size(m_capacity)
-		, m_data(new T[m_capacity])
+		, m_data(new value_type[m_capacity])
 	{
 	}
 
 	DynamicArray(const std::initializer_list<value_type>& valueList)
 		: m_capacity(valueList.size())
 		, m_size(m_capacity)
-		, m_data(new T[m_capacity])
+		, m_data(new value_type[m_capacity])
 	{
 		std::copy(valueList.begin(), valueList.end(), m_data);
 	}
@@ -46,9 +45,9 @@ public:
 	DynamicArray(const DynamicArray& other)
 		: m_capacity(other.m_capacity)
 		, m_size(other.m_size)
-		, m_data(new T[other.m_capacity])
+		, m_data(new value_type[other.m_capacity])
 	{
-		for (size_t i = 0; i < m_size; i++)
+		for (size_type i = 0; i < m_size; i++)
 			m_data[i] = other.m_data[i];
 	}
 
@@ -67,7 +66,7 @@ public:
 
 			m_capacity = other.m_capacity;
 			m_size = other.m_size;
-			m_data = new T[other.m_capacity];
+			m_data = new value_type[other.m_capacity];
 
 			for (int i = 0; i < m_size; i++)
 				m_data[i] = other.m_data[i];
@@ -78,9 +77,9 @@ public:
 	DynamicArray(const DynamicArray&& other)
 		: m_capacity(std::move(other.m_capacity))
 		, m_size(std::move(other.m_size))
-		, m_data(new T[other.m_capacity])
+		, m_data(new value_type[other.m_capacity])
 	{
-		for (size_t i = 0; i < m_size; i++)
+		for (size_type i = 0; i < m_size; i++)
 			m_data[i] = std::move(other.m_data[i]);
 
 		other.m_capacity = 0;
@@ -97,9 +96,9 @@ public:
 
 			m_capacity = std::move(other.m_capacity);
 			m_size = std::move(other.m_size);
-			m_data = new T[other.m_capacity];
+			m_data = new value_type[other.m_capacity];
 
-			for (size_t i = 0; i < m_size; i++)
+			for (size_type i = 0; i < m_size; i++)
 				m_data[i] = std::move(other.m_data[i]);
 
 			other.m_capacity = 0;
@@ -109,7 +108,7 @@ public:
 		return *this;
 	}
 
-	constexpr void PushBack(const T& value)
+	constexpr void PushBack(const_reference value)
 	{
 		size_type newSize = m_size + 1;
 		ReallocAndCopyData(newSize);
@@ -118,12 +117,12 @@ public:
 	}
 
 	template <typename ...Args>
-	T& EmplaceBack(Args&& ...args)
+	reference EmplaceBack(Args&& ...args)
 	{
 		size_type oldSize = m_size;
 		size_type newSize = m_size + 1;
 		ReallocAndCopyData(newSize);
-		m_data[m_size] = T(std::forward<Args>(args)...);
+		m_data[m_size] = value_type(std::forward<Args>(args)...);
 		m_size = newSize;
 		return m_data[oldSize];
 	}
@@ -133,14 +132,14 @@ public:
 		if (m_size > 0)
 		{
 			m_size--;
-			m_data[m_size].~T();
+			m_data[m_size].~value_type();
 		}
 	}
 
 	constexpr void Clear()
 	{
 		for (int i = 0; i < m_size; i++)
-			m_data[i].~T();
+			m_data[i].~value_type();
 		m_size = 0;
 	}
 
@@ -181,13 +180,13 @@ public:
 	}
 
 
-	constexpr reference operator[] (size_t index)
+	constexpr reference operator[] (size_type index)
 	{
 		assert(index >= 0 && index < m_size);
 		return m_data[index];
 	}
 
-	constexpr const_reference operator[] (size_t index) const
+	constexpr const_reference operator[] (size_type index) const
 	{
 		assert(index >= 0 && index < m_size);
 		return m_data[index];
@@ -199,16 +198,16 @@ private:
 		if (Empty())
 		{
 			m_capacity = 2;
-			m_data = new T[m_capacity];
+			m_data = new value_type[m_capacity];
 		}
 
 		size_type growth = CalculateGrowth(newSize);
 		if (growth > m_capacity)
 		{
 			m_capacity = growth;
-			T* newMemoryBlock = new T[m_capacity];
+			pointer newMemoryBlock = new value_type[m_capacity];
 
-			for (size_t i = 0; i < m_size; i++)
+			for (size_type i = 0; i < m_size; i++)
 				newMemoryBlock[i] = std::move(m_data[i]);
 
 			delete[] m_data;
