@@ -196,6 +196,12 @@ public:
 private:
 	constexpr void ReallocAndCopyData(size_type newSize)
 	{
+		if (Empty())
+		{
+			m_capacity = 2;
+			m_data = new T[m_capacity];
+		}
+
 		size_type growth = CalculateGrowth(newSize);
 		if (growth > m_capacity)
 		{
@@ -203,7 +209,7 @@ private:
 			T* newMemoryBlock = new T[m_capacity];
 
 			for (size_t i = 0; i < m_size; i++)
-				newMemoryBlock[i] = m_data[i];
+				newMemoryBlock[i] = std::move(m_data[i]);
 
 			delete[] m_data;
 			m_data = newMemoryBlock;
