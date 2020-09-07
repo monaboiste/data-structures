@@ -39,20 +39,20 @@ public:
 			m_data[i] = other.m_data[i];
 	}
 
-	Array operator =(const Array& other)
+	Array& operator =(const Array& other)
 	{
 		for (size_type i = 0; i < N; i++)
 			m_data[i] = other.m_data[i];
 		return *this;
 	}
 
-	Array(const Array&& other)
+	Array(Array&& other)
 	{
 		for (size_type i = 0; i < N; i++)
 			m_data[i] = std::move(other.m_data[i]);
 	}
 
-	Array operator =(const Array&& other)
+	Array& operator =(Array&& other)
 	{
 		for (size_type i = 0; i < N; i++)
 			m_data[i] = std::move(other.m_data[i]);

@@ -58,7 +58,7 @@ public:
 			delete[] m_data;
 	}
 
-	DynamicArray operator =(const DynamicArray& other)
+	DynamicArray& operator =(const DynamicArray& other)
 	{
 		if (&other != this)
 		{
@@ -75,7 +75,7 @@ public:
 		return *this;
 	}
 
-	DynamicArray(const DynamicArray&& other)
+	DynamicArray(DynamicArray&& other)
 		: m_capacity(std::move(other.m_capacity))
 		, m_size(std::move(other.m_size))
 		, m_data(new value_type[other.m_capacity])
@@ -88,7 +88,7 @@ public:
 		other.m_data = nullptr;
 	}
 
-	DynamicArray operator =(const DynamicArray&& other)
+	DynamicArray& operator =(DynamicArray&& other)
 	{
 		if (&other != this)
 		{
