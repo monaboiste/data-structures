@@ -139,8 +139,9 @@ public:
 
 	constexpr void Clear()
 	{
-		for (int i = 0; i < m_size; i++)
+		for (size_type i = 0; i < m_size; i++)
 			m_data[i].~value_type();
+		m_data = nullptr;
 		m_size = 0;
 	}
 
