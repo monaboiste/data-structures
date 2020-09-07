@@ -1,6 +1,7 @@
 #include <cstddef>
-#include <initializer_list>
+#include <cstdint>
 #include <cassert>
+#include <initializer_list>
 
 #include "RAIterator.h"
 
