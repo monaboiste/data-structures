@@ -9,19 +9,20 @@
 /// list container class.
 /// 
 
-template <class T>
+template <class TList>
 class BDIterator
 {
 	template <class>
 	friend class List;
 public:
 	using iterator_category = std::bidirectional_iterator_tag;
-	using value_type = T;
-	using pointer = T*;
-	using reference = T&;
-	using const_pointer = const T*;
-	using const_reference = const T&;
-	using node_pointer = typename List<T>::Node*;
+	using value_type = typename TList::value_type;
+	using pointer = typename TList::pointer;
+	using reference = typename TList::reference;
+	using const_pointer = typename TList::const_pointer;
+	using const_reference = typename TList::const_reference;
+	using difference_type = std::ptrdiff_t;
+	using node_pointer = typename List<value_type>::Node*;
 public:
 	BDIterator() = default;
 

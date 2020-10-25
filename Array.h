@@ -21,8 +21,8 @@ public:
 	using reference = T&;
 	using const_pointer = const T*;
 	using const_reference = const T&;
-	using iterator = RAIterator<T>;
-	using const_iterator = RAIterator<const T>;
+	using iterator = RAIterator<Array<T, N>>;
+	using const_iterator = RAIterator<const Array<T, N>>;
 
 public:
 	Array() = default;

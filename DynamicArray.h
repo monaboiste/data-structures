@@ -22,8 +22,8 @@ public:
 	using reference = T&;
 	using const_pointer = const T*;
 	using const_reference = const T&;
-	using iterator = RAIterator<T>;
-	using const_iterator = RAIterator<const T>;
+	using iterator = RAIterator<DynamicArray<T>>;
+	using const_iterator = RAIterator<const DynamicArray<T>>;
 
 public:
 	DynamicArray() = default;

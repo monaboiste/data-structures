@@ -25,8 +25,8 @@ public:
 	using reference = T&;
 	using const_pointer = const T*;
 	using const_reference = const T&;
-	using iterator = BDIterator<T>;
-	using const_iterator = BDIterator<const T>;
+	using iterator = BDIterator<List<T>>;
+	using const_iterator = BDIterator<const List<T>>;
 
 public:
 	List() = default;
@@ -40,6 +40,28 @@ public:
 	~List()
 	{
 		Clear();
+	}
+
+	List(const List& other)
+	{
+		for (auto traverseNode = other.m_head;
+			traverseNode != nullptr; traverseNode = traverseNode->next)
+		{
+			PushBack(traverseNode->record);
+		}
+	}
+
+	List& operator =(const List& other)
+	{
+		if (this != &other)
+		{
+			for (auto traverseNode = other.m_head;
+				traverseNode != nullptr; traverseNode = traverseNode->next)
+			{
+				PushBack(traverseNode->record);
+			}
+		}
+		return *this;
 	}
 
 	void PushFront(value_type value)
@@ -56,6 +78,7 @@ public:
 	{
 		m_nodeCount++;
 		assert(position < m_nodeCount);
+
 		Node* newNode = new Node;
 		newNode->record = value;
 
@@ -142,25 +165,25 @@ public:
 	iterator Begin()
 	{
 		assert(m_head != nullptr);
-		return BDIterator<value_type>(m_head);
+		return BDIterator<List>(m_head);
 	}
 
 	const_iterator Begin() const
 	{
 		assert(m_head != nullptr);
-		return BDIterator<value_type>(m_head);
+		return BDIterator<List>(m_head);
 	}
 
 	iterator End()
 	{
 		assert(m_tail != nullptr);
-		return BDIterator<value_type>(m_tail->next);
+		return BDIterator<List>(m_tail->next);
 	}
 
 	const_iterator End() const
 	{
 		assert(m_tail != nullptr);
-		return BDIterator<value_type>(m_tail->next);
+		return BDIterator<List>(m_tail->next);
 	}
 
 private:

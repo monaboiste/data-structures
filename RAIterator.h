@@ -10,17 +10,17 @@
 /// custom container classes.
 /// 
 
-template <class T>
+template <class TContainer>
 class RAIterator
 {
 public:
 	// @NOTE: stl algorithms expects exactly named traits such as below.
 	using iterator_category = std::random_access_iterator_tag;
-	using value_type = T;
-	using pointer = T*;
-	using reference = T&;
-	using const_pointer = const T*;
-	using const_reference = const T&;
+	using value_type = typename TContainer::value_type;
+	using pointer = typename TContainer::pointer;
+	using reference = typename TContainer::reference;
+	using const_pointer = typename TContainer::const_pointer;
+	using const_reference = typename TContainer::const_reference;
 	using difference_type = std::ptrdiff_t;
 public:
 	RAIterator() = default;
@@ -46,8 +46,8 @@ public:
 
 	constexpr RAIterator& operator ++() { m_parg++; return *this; }
 	constexpr RAIterator& operator --() { m_parg--; return *this; }
-	constexpr RAIterator operator ++(int) { T* tempPtr = m_parg; m_parg++; return RAIterator(tempPtr); }
-	constexpr RAIterator operator --(int) { T* tempPtr = m_parg; m_parg--; return RAIterator(tempPtr); }
+	constexpr RAIterator operator ++(int) { pointer tempPtr = m_parg; m_parg++; return RAIterator(tempPtr); }
+	constexpr RAIterator operator --(int) { pointer tempPtr = m_parg; m_parg--; return RAIterator(tempPtr); }
 
 	constexpr difference_type operator -(const RAIterator& other) { return std::distance(m_parg, other.m_parg); }
 
