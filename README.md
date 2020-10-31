@@ -1,5 +1,7 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/monaboiste/data-structures/blob/master/LICENSE)
+
 # Data structures in C++
-Repository contains simple code snipptes for data structures implemented in C++.  
+Repository contains simple code snipptes for data structures implemented in C++, based off stl's containers. These were coded with understanding stl's insides in mind.  
 This can extend to classical algorithms in the future.  
 
 ## Compiling
